@@ -9,6 +9,10 @@
 #include "Stack_char.h"
 #include "Stack_complex.h"
 
+
+
+
+
 uint8_t has_higher_precedence(char op1, char op2) {
 	uint8_t rtnValue = FALSE;
 
@@ -32,7 +36,7 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 	uint8_t isNumberEnded = TRUE;
 	uint8_t i;
 	for (i = 0; i < strlen(infixNotation); i++) {
-		if (isdigit(infixNotation[i]) == TRUE || infixNotation[i] == 'i' || infixNotation[i] == '.') {
+		if (isdigit(infixNotation[i]) == TRUE || infixNotation[i] == 'j' || infixNotation[i] == '.') {
 			if (isNumberEnded == TRUE) {
 				isNumberEnded = FALSE;
 			}
@@ -95,6 +99,12 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 #endif
 	}
 
+
+	if (isNumberEnded == FALSE) {
+		isNumberEnded = TRUE;
+		stack_char_push(&outputStack, '$');
+	}
+
 	while (stack_char_isEmpty(&operationStack) == FALSE) {
 		stack_char_push(&outputStack, stack_char_top(&operationStack));
 		stack_char_pop(&operationStack);
@@ -109,6 +119,9 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 
 	stack_char_get_string(&outputStack, postfixNotation);
 }
+
+
+
 
 #define COMPLEX_NUMBER_STRING_SIZE	10
 
@@ -128,7 +141,7 @@ COMPLEX evaluatePostfix(char *postfixNotation) {
 
 	uint8_t i;
 	for (i = 0; i < strlen(postfixNotation); i++) {
-		if (isdigit(postfixNotation[i]) == TRUE || postfixNotation[i] == 'i' || postfixNotation[i] == '.') {
+		if (isdigit(postfixNotation[i]) == TRUE || postfixNotation[i] == 'j' || postfixNotation[i] == '.') {
 			stack_char_push(&complexNumberStack, postfixNotation[i]);
 		} else if (postfixNotation[i] == '$') {
 			stack_char_get_string(&complexNumberStack, complexNumberString);

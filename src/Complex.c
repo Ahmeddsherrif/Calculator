@@ -6,23 +6,29 @@
 
 #include "Complex.h"
 
-COMPLEX stringToComplex(const char *inputString){
+COMPLEX stringToComplex(const char *inputString) {
 	COMPLEX returnedComplexNumber;
 	DestroyComplex(&returnedComplexNumber);
 
+	if (strcmp(inputString,"j") == 0) {
+		returnedComplexNumber.imaginary = 1;
+	} else if (strcmp(inputString,"-j") == 0) {
+		returnedComplexNumber.imaginary = -1;
+	}
 
-	char *endptr;
-	double num = strtod(inputString, &endptr);
+	else {
+		char *endptr;
+		double num = strtod(inputString, &endptr);
 
-	if (*endptr == 'i') {
-		returnedComplexNumber.imaginary = num;
-	} else {
-		returnedComplexNumber.real = num;
+		if (*endptr == 'j') {
+			returnedComplexNumber.imaginary = num;
+		} else {
+			returnedComplexNumber.real = num;
+		}
 	}
 
 	return returnedComplexNumber;
 }
-
 
 /* Creation */
 //Add your code here
@@ -130,11 +136,9 @@ void PrintComplex(CPTR complex) {
 			printf("+");
 		}
 
-		else{
+		else {
 			// DO NOTHING
 		}
-
-
 
 		if (complex->imaginary == 1) {
 			printf("J");

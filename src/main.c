@@ -16,7 +16,7 @@ int main(void) {
 
 	char infixNotation[BUFFER_SIZE];
 	memset(infixNotation, 0, BUFFER_SIZE);
-	strcpy(infixNotation, "(((1.7+2i)*3.7i-5i)*2)" );
+	strcpy(infixNotation, "1111/2" );
 
 
 	char postfixNotation[BUFFER_SIZE];
