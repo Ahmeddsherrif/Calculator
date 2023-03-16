@@ -4,15 +4,16 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "Utilities.h"
 #include "Complex.h"
 
 COMPLEX stringToComplex(const char *inputString) {
 	COMPLEX returnedComplexNumber;
 	DestroyComplex(&returnedComplexNumber);
 
-	if (strcmp(inputString,"j") == 0) {
+	if (strcmp(inputString, "j") == 0) {
 		returnedComplexNumber.imaginary = 1;
-	} else if (strcmp(inputString,"-j") == 0) {
+	} else if (strcmp(inputString, "-j") == 0) {
 		returnedComplexNumber.imaginary = -1;
 	}
 
@@ -121,19 +122,29 @@ COMPLEX DivideComplex(CPTR first, CPTR second) {
 }
 // End of your code 
 
-/* Printing */
-//Add your code here
-void PrintComplex(CPTR complex) {
+
+
+
+void complexToString(CPTR complex, char *complexString) {
+	char complexStringBuffer[MAX_NUMBER_LENGTH];
+	memset(complexStringBuffer, 0, MAX_NUMBER_LENGTH);
+
+	char realStringBuffer[MAX_NUMBER_LENGTH];
+	memset(realStringBuffer, 0, MAX_NUMBER_LENGTH);
+
+	char imaginaryStringBuffer[MAX_NUMBER_LENGTH];
+	memset(imaginaryStringBuffer, 0, MAX_NUMBER_LENGTH);
 
 	if (complex->real != 0.0) {
-		printf("%f", complex->real);
+		doubleToString(complex->real, realStringBuffer);
+		strcat(complexStringBuffer, realStringBuffer);
 	}
 	// Check to see if the sign is positive or negtive to add it to the print status
 
-	if (complex->imaginary != 0) {
+	if (complex->imaginary != 0.0) {
+
 		if (complex->imaginary > 0 && complex->real != 0.0) {
-			// print positive sign
-			printf("+");
+			strcat(complexStringBuffer, "+");
 		}
 
 		else {
@@ -141,17 +152,34 @@ void PrintComplex(CPTR complex) {
 		}
 
 		if (complex->imaginary == 1) {
-			printf("J");
+			strcat(complexStringBuffer, "J");
 		}
 
 		else if (complex->imaginary == -1) {
-			printf("-J");
+			strcat(complexStringBuffer, "-J");
 		}
 
 		else {
-			printf("%fJ", complex->imaginary);
+			doubleToString(complex->imaginary, imaginaryStringBuffer);
+			strcat(complexStringBuffer, imaginaryStringBuffer);
+			strcat(complexStringBuffer, "J");
 		}
 	}
+
+	strcpy(complexString, complexStringBuffer);
+}
+
+/* Printing */
+//Add your code here
+void PrintComplex(CPTR complex) {
+
+	char complexStringBuffer[MAX_NUMBER_LENGTH];
+	memset(complexStringBuffer, 0, MAX_NUMBER_LENGTH);
+
+	complexToString(complex, complexStringBuffer);
+
+	printf("%s", complexStringBuffer);
+
 }
 
 // End of your code 

@@ -9,8 +9,7 @@
 #define CALCULATOR_H_
 
 
-void infixToPostfix(char *infixNotation, char *postfixNotation);
-COMPLEX evaluatePostfix(char *postfixNotation);
+void calculate(char *expression, char *evaluation);
 
 
 #endif /* CALCULATOR_H_ */

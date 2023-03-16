@@ -12,7 +12,6 @@
 
 
 
-
 uint8_t has_higher_precedence(char op1, char op2) {
 	uint8_t rtnValue = FALSE;
 
@@ -114,8 +113,9 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 		stack_char_print(&operationStack);
 		stack_char_print(&outputStack);
 		printf("\n");
-	}
 #endif
+	}
+
 
 	stack_char_get_string(&outputStack, postfixNotation);
 }
@@ -187,4 +187,16 @@ COMPLEX evaluatePostfix(char *postfixNotation) {
 
 	return rtnValue;
 }
+
+void calculate(char *expression, char *evaluation) {
+
+	char postfixNotation[BUFFER_SIZE];
+	memset(postfixNotation, 0, BUFFER_SIZE);
+
+	infixToPostfix(expression, postfixNotation);
+	COMPLEX value = evaluatePostfix(postfixNotation);
+
+	complexToString(&value, evaluation);
+}
+
 

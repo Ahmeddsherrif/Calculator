@@ -1,6 +1,8 @@
 #ifndef _COMPLEX_H_
 #define _COMPLEX_H_
 
+#define MAX_NUMBER_LENGTH		30
+
 struct complex {
 	double real;
 	double imaginary;
@@ -17,5 +19,6 @@ COMPLEX ConjugateComplex(CPTR complex);
 COMPLEX DivideComplex(CPTR first, CPTR second);
 void PrintComplex(CPTR complex);
 COMPLEX stringToComplex(const char *inputString);
+void complexToString(CPTR complex, char *complexString);
 
 #endif //_COMPLEX_H_

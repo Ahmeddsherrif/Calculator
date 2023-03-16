@@ -1,10 +1,10 @@
 /*
  ============================================================================
  Name        : Calculator.c
- Author      : Ahmed
+ Author      : Ahmed Sherif Mohamed
  Version     :
  Copyright   : 
- Description : Hello World in C, Ansi-style
+ Description : Software Version of Complex Number Calculator
  ============================================================================
  */
 
@@ -12,21 +12,16 @@
 
 
 int main(void) {
-
-
 	char infixNotation[BUFFER_SIZE];
 	memset(infixNotation, 0, BUFFER_SIZE);
-	strcpy(infixNotation, "1111/2" );
+	strcpy(infixNotation, "1111/2+3j*(5j/33j)" );
 
+	char complexStringBuffer[MAX_NUMBER_LENGTH];
+	memset(complexStringBuffer, 0, MAX_NUMBER_LENGTH);
 
-	char postfixNotation[BUFFER_SIZE];
-	memset(postfixNotation, 0, BUFFER_SIZE);
+	calculate(infixNotation, complexStringBuffer);
 
-	infixToPostfix(infixNotation, postfixNotation);
-	COMPLEX value = evaluatePostfix(postfixNotation);
-
-	printf("%s=", infixNotation);
-	PrintComplex(&value);
+	printf("%s=%s",infixNotation, complexStringBuffer);
 
 	return 0;
 }

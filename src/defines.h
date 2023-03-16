@@ -11,7 +11,7 @@
 #define TRUE			1
 #define FALSE			0
 
-#define LOG TRUE
+#define LOG FALSE
 
 
 #endif /* DEFINES_H_ */

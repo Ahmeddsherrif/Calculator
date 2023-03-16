@@ -15,6 +15,8 @@
 #include <ctype.h>
 
 #include "defines.h"
+#include "Utilities.h"
+
 #include "Complex.h"
 #include "Stack_char.h"
 #include "Stack_complex.h"
