@@ -10,7 +10,7 @@
 
 
 void infixToPostfix(char *infixNotation, char *postfixNotation);
-uint8_t evaluatePostfix(char *postfixNotation);
+COMPLEX evaluatePostfix(char *postfixNotation);
 
 
 #endif /* CALCULATOR_H_ */

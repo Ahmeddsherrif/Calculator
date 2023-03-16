@@ -13,18 +13,20 @@
 
 int main(void) {
 
+
 	char infixNotation[BUFFER_SIZE];
 	memset(infixNotation, 0, BUFFER_SIZE);
-	strcpy(infixNotation, "(((1+2)*3-5)*2)" );
+	strcpy(infixNotation, "(((1.7+2i)*3.7i-5i)*2)" );
 
 
 	char postfixNotation[BUFFER_SIZE];
 	memset(postfixNotation, 0, BUFFER_SIZE);
 
 	infixToPostfix(infixNotation, postfixNotation);
-	uint8_t value = evaluatePostfix(postfixNotation);
+	COMPLEX value = evaluatePostfix(postfixNotation);
 
-	printf("%s=%d", infixNotation, value);
+	printf("%s=", infixNotation);
+	PrintComplex(&value);
 
 	return 0;
 }

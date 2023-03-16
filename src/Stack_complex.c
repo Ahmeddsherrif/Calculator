@@ -10,28 +10,29 @@
 #include <string.h>
 
 #include "defines.h"
-#include "Stack.h"
+#include "Complex.h"
+#include "Stack_complex.h"
 
-void stack_ctor(Stack_t *this) {
-	memset(this, 0, sizeof(Stack_t));
-	this->start = (char*) (&(this->buffer[0])) - 1;
+void stack_complex_ctor(StackComplex_t *this) {
+	memset(this, 0, sizeof(StackComplex_t));
+	this->start = (COMPLEX*) (&(this->buffer[0])) - 1;
 	this->top = this->start;
 	this->isEmpty = TRUE;
 }
 
-uint8_t stack_isEmpty(Stack_t *this) {
+uint8_t stack_complex_isEmpty(StackComplex_t *this) {
 	return this->isEmpty;
 }
 
-void stack_push(Stack_t *this, char input) {
+void stack_complex_push(StackComplex_t *this, COMPLEX input) {
 	(this->top)++;
 	*(this->top) = input;
 	this->isEmpty = FALSE;
 }
 
-void stack_pop(Stack_t *this) {
+void stack_complex_pop(StackComplex_t *this) {
 	if (this->top != this->start) {
-		*(this->top) = 0;
+		DestroyComplex(this->top);
 		(this->top)--;
 
 		if (this->top == this->start) {
@@ -40,18 +41,10 @@ void stack_pop(Stack_t *this) {
 	}
 }
 
-char stack_top(Stack_t *this) {
-	char rtnChar = 0;
+COMPLEX stack_complex_top(StackComplex_t *this) {
+	COMPLEX rtnChar = {0, 0};
 	if (this->top != this->start) {
 		rtnChar = *(this->top);
 	}
 	return rtnChar;
-}
-
-void stack_get_string(Stack_t *this, char *string) {
-	strcpy(string, this->buffer);
-}
-
-void stack_print(Stack_t *this) {
-	printf("%s\t", this->buffer);
 }

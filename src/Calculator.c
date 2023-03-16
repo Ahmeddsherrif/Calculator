@@ -5,7 +5,9 @@
 #include <ctype.h>
 
 #include "defines.h"
-#include "Stack.h"
+#include "Complex.h"
+#include "Stack_char.h"
+#include "Stack_complex.h"
 
 uint8_t has_higher_precedence(char op1, char op2) {
 	uint8_t rtnValue = FALSE;
@@ -21,31 +23,41 @@ uint8_t has_higher_precedence(char op1, char op2) {
 
 void infixToPostfix(char *infixNotation, char *postfixNotation) {
 
-	Stack_t operationStack;
-	stack_ctor(&operationStack);
+	StackChar_t operationStack;
+	stack_char_ctor(&operationStack);
 
-	Stack_t outputStack;
-	stack_ctor(&outputStack);
+	StackChar_t outputStack;
+	stack_char_ctor(&outputStack);
 
+	uint8_t isNumberEnded = TRUE;
 	uint8_t i;
 	for (i = 0; i < strlen(infixNotation); i++) {
-		if (isdigit(infixNotation[i]) == TRUE) {
-			stack_push(&outputStack, infixNotation[i]);
+		if (isdigit(infixNotation[i]) == TRUE || infixNotation[i] == 'i' || infixNotation[i] == '.') {
+			if (isNumberEnded == TRUE) {
+				isNumberEnded = FALSE;
+			}
+			stack_char_push(&outputStack, infixNotation[i]);
 		} else {
+
+			if (isNumberEnded == FALSE) {
+				isNumberEnded = TRUE;
+				stack_char_push(&outputStack, '$');
+			}
+
 			switch (infixNotation[i]) {
 				case '(': {
-					stack_push(&operationStack, infixNotation[i]);
+					stack_char_push(&operationStack, infixNotation[i]);
 					break;
 				}
 				case ')': {
 
-					while (stack_top(&operationStack) != '(') {
-						stack_push(&outputStack, stack_top(&operationStack));
-						stack_pop(&operationStack);
+					while (stack_char_top(&operationStack) != '(') {
+						stack_char_push(&outputStack, stack_char_top(&operationStack));
+						stack_char_pop(&operationStack);
 					}
 
 					//To pop the open Bracket '('
-					stack_pop(&operationStack);
+					stack_char_pop(&operationStack);
 
 					break;
 				}
@@ -55,16 +67,16 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 				case '/':
 				case '*': {
 
-					if (stack_isEmpty(&operationStack) == TRUE || stack_top(&operationStack) == '(') {
-						stack_push(&operationStack, infixNotation[i]);
+					if (stack_char_isEmpty(&operationStack) == TRUE || stack_char_top(&operationStack) == '(') {
+						stack_char_push(&operationStack, infixNotation[i]);
 					} else {
 
-						if (has_higher_precedence(infixNotation[i], stack_top(&operationStack)) == FALSE) {
-							stack_push(&outputStack, stack_top(&operationStack));
-							stack_pop(&operationStack);
+						if (has_higher_precedence(infixNotation[i], stack_char_top(&operationStack)) == FALSE) {
+							stack_char_push(&outputStack, stack_char_top(&operationStack));
+							stack_char_pop(&operationStack);
 						}
 
-						stack_push(&operationStack, infixNotation[i]);
+						stack_char_push(&operationStack, infixNotation[i]);
 					}
 					break;
 				}
@@ -77,75 +89,89 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 		}
 #if LOG == TRUE
 		printf("%c\t", infixNotation[i]);
-		stack_print(&operationStack);
-		stack_print(&outputStack);
+		stack_char_print(&operationStack);
+		stack_char_print(&outputStack);
 		printf("\n");
 #endif
 	}
 
-	while (stack_isEmpty(&operationStack) == FALSE) {
-		stack_push(&outputStack, stack_top(&operationStack));
-		stack_pop(&operationStack);
+	while (stack_char_isEmpty(&operationStack) == FALSE) {
+		stack_char_push(&outputStack, stack_char_top(&operationStack));
+		stack_char_pop(&operationStack);
 
 #if LOG == TRUE
 		printf("\t");
-		stack_print(&operationStack);
-		stack_print(&outputStack);
+		stack_char_print(&operationStack);
+		stack_char_print(&outputStack);
 		printf("\n");
 	}
 #endif
 
-	stack_get_string(&outputStack, postfixNotation);
+	stack_char_get_string(&outputStack, postfixNotation);
 }
 
+#define COMPLEX_NUMBER_STRING_SIZE	10
 
-uint8_t evaluatePostfix(char *postfixNotation) {
-	Stack_t resultStack;
-	stack_ctor(&resultStack);
+COMPLEX evaluatePostfix(char *postfixNotation) {
+	StackComplex_t resultStack;
+	stack_complex_ctor(&resultStack);
 
-	uint8_t operand1;
-	uint8_t operand2;
-	uint8_t result;
+	StackChar_t complexNumberStack;
+	stack_char_ctor(&complexNumberStack);
 
-	uint8_t j;
-	for (j = 0; j < strlen(postfixNotation); j++) {
-		if (isdigit(postfixNotation[j]) == TRUE) {
-			stack_push(&resultStack, postfixNotation[j] - '0');
+	char complexNumberString[COMPLEX_NUMBER_STRING_SIZE];
+	memset(complexNumberString, 0, COMPLEX_NUMBER_STRING_SIZE);
+
+	COMPLEX operand1;
+	COMPLEX operand2;
+	COMPLEX result;
+
+	uint8_t i;
+	for (i = 0; i < strlen(postfixNotation); i++) {
+		if (isdigit(postfixNotation[i]) == TRUE || postfixNotation[i] == 'i' || postfixNotation[i] == '.') {
+			stack_char_push(&complexNumberStack, postfixNotation[i]);
+		} else if (postfixNotation[i] == '$') {
+			stack_char_get_string(&complexNumberStack, complexNumberString);
+			result = stringToComplex(complexNumberString);
+
+			//Clear Number Buffers
+			stack_char_ctor(&complexNumberStack);
+			memset(complexNumberString, 0, COMPLEX_NUMBER_STRING_SIZE);
+
+			stack_complex_push(&resultStack, result);
 		} else {
-			operand1 = stack_top(&resultStack);
-			stack_pop(&resultStack);
+			operand1 = stack_complex_top(&resultStack);
+			stack_complex_pop(&resultStack);
 
-			operand2 = stack_top(&resultStack);
-			stack_pop(&resultStack);
+			operand2 = stack_complex_top(&resultStack);
+			stack_complex_pop(&resultStack);
 
-			switch (postfixNotation[j]) {
+			switch (postfixNotation[i]) {
 				case '+': {
-					result = operand2 + operand1;
+					result = AddComplex(&operand2, &operand1);
 					break;
 				}
 				case '-': {
-					result = operand2 - operand1;
+					result = SubtractComplex(&operand2, &operand1);
 					break;
 				}
 				case '*': {
-					result = operand2 * operand1;
+					result = MultiplyComplex(&operand2, &operand1);
 					break;
 				}
 				case '/': {
-					result = operand2 / operand1;
+					result = DivideComplex(&operand2, &operand1);
 					break;
 				}
 			}
 
-			stack_push(&resultStack, result);
+			stack_complex_push(&resultStack, result);
 
 		}
 	}
 
-
-	uint8_t rtnValue = stack_top(&resultStack);
+	COMPLEX rtnValue = stack_complex_top(&resultStack);
 
 	return rtnValue;
 }
-
 
