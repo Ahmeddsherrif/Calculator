@@ -3,8 +3,8 @@ Implementation of Complex Number Calculator using the Shunting Yard Algorithm
 
 
 ## From Terminal
-No logging - > Calculator.exe
-logging    - > Calculator.exe -L
+No logging - > Calculator.exe  
+logging    - > Calculator.exe -L  
 
 
 ## Output Without Logging
