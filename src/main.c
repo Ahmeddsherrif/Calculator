@@ -10,18 +10,32 @@
 
 #include "main.h"
 
+int main(int argc, char* argv[]) {
 
-int main(void) {
 	char infixNotation[BUFFER_SIZE];
-	memset(infixNotation, 0, BUFFER_SIZE);
-	strcpy(infixNotation, "1111/2+3j*(5j/33j)" );
-
 	char complexStringBuffer[MAX_NUMBER_LENGTH];
-	memset(complexStringBuffer, 0, MAX_NUMBER_LENGTH);
 
-	calculate(infixNotation, complexStringBuffer);
+	LOG = FALSE;
 
-	printf("%s=%s",infixNotation, complexStringBuffer);
+	if(argc == 2 && strcmp(argv[1],"-L") == 0){
+		LOG = TRUE;
+	}
+
+	while (1) {
+		memset(infixNotation, 0, BUFFER_SIZE);
+		memset(complexStringBuffer, 0, MAX_NUMBER_LENGTH);
+
+		printf("Enter Expression: ");
+		scanf("%s", infixNotation);
+
+		if (strcmp(infixNotation, "KILL") == 0) {
+			break;
+		}
+
+		calculate(infixNotation, complexStringBuffer);
+
+		printf("= %s\n\n", complexStringBuffer);
+	}
 
 	return 0;
 }

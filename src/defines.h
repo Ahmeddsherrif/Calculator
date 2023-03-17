@@ -11,7 +11,7 @@
 #define TRUE			1
 #define FALSE			0
 
-#define LOG FALSE
+uint8_t LOG;
 
 
 #endif /* DEFINES_H_ */

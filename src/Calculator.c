@@ -9,9 +9,6 @@
 #include "Stack_char.h"
 #include "Stack_complex.h"
 
-
-
-
 uint8_t has_higher_precedence(char op1, char op2) {
 	uint8_t rtnValue = FALSE;
 
@@ -26,6 +23,10 @@ uint8_t has_higher_precedence(char op1, char op2) {
 
 void infixToPostfix(char *infixNotation, char *postfixNotation) {
 
+	if (LOG == TRUE) {
+		printf("\n");
+	}
+
 	StackChar_t operationStack;
 	stack_char_ctor(&operationStack);
 
@@ -35,7 +36,7 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 	uint8_t isNumberEnded = TRUE;
 	uint8_t i;
 	for (i = 0; i < strlen(infixNotation); i++) {
-		if (isdigit(infixNotation[i]) == TRUE || infixNotation[i] == 'j' || infixNotation[i] == '.') {
+		if (isdigit(infixNotation[i]) == TRUE || infixNotation[i] == 'j' || infixNotation[i] == 'J' || infixNotation[i] == '.') {
 			if (isNumberEnded == TRUE) {
 				isNumberEnded = FALSE;
 			}
@@ -74,7 +75,8 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 						stack_char_push(&operationStack, infixNotation[i]);
 					} else {
 
-						if (has_higher_precedence(infixNotation[i], stack_char_top(&operationStack)) == FALSE) {
+						while (has_higher_precedence(infixNotation[i], stack_char_top(&operationStack)) == FALSE
+								&& stack_char_isEmpty(&operationStack) == FALSE) {
 							stack_char_push(&outputStack, stack_char_top(&operationStack));
 							stack_char_pop(&operationStack);
 						}
@@ -90,14 +92,14 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 			}
 
 		}
-#if LOG == TRUE
-		printf("%c\t", infixNotation[i]);
-		stack_char_print(&operationStack);
-		stack_char_print(&outputStack);
-		printf("\n");
-#endif
-	}
 
+		if (LOG == TRUE) {
+			printf("%c\t", infixNotation[i]);
+			stack_char_print(&operationStack);
+			stack_char_print(&outputStack);
+			printf("\n");
+		}
+	}
 
 	if (isNumberEnded == FALSE) {
 		isNumberEnded = TRUE;
@@ -108,20 +110,20 @@ void infixToPostfix(char *infixNotation, char *postfixNotation) {
 		stack_char_push(&outputStack, stack_char_top(&operationStack));
 		stack_char_pop(&operationStack);
 
-#if LOG == TRUE
-		printf("\t");
-		stack_char_print(&operationStack);
-		stack_char_print(&outputStack);
-		printf("\n");
-#endif
+		if (LOG == TRUE) {
+			printf("\t");
+			stack_char_print(&operationStack);
+			stack_char_print(&outputStack);
+			printf("\n");
+		}
 	}
 
+	if (LOG == TRUE) {
+		printf("\n");
+	}
 
 	stack_char_get_string(&outputStack, postfixNotation);
 }
-
-
-
 
 #define COMPLEX_NUMBER_STRING_SIZE	10
 
@@ -141,7 +143,7 @@ COMPLEX evaluatePostfix(char *postfixNotation) {
 
 	uint8_t i;
 	for (i = 0; i < strlen(postfixNotation); i++) {
-		if (isdigit(postfixNotation[i]) == TRUE || postfixNotation[i] == 'j' || postfixNotation[i] == '.') {
+		if (isdigit(postfixNotation[i]) == TRUE || postfixNotation[i] == 'j' || postfixNotation[i] == 'J' || postfixNotation[i] == '.') {
 			stack_char_push(&complexNumberStack, postfixNotation[i]);
 		} else if (postfixNotation[i] == '$') {
 			stack_char_get_string(&complexNumberStack, complexNumberString);
@@ -178,12 +180,26 @@ COMPLEX evaluatePostfix(char *postfixNotation) {
 				}
 			}
 
+			if (LOG == TRUE) {
+				printf("(");
+				PrintComplex(&operand2);
+				printf(") %c (", postfixNotation[i]);
+				PrintComplex(&operand1);
+				printf(") = ");
+				PrintComplex(&result);
+				printf("\n");
+			}
+
 			stack_complex_push(&resultStack, result);
 
 		}
 	}
 
 	COMPLEX rtnValue = stack_complex_top(&resultStack);
+
+	if (LOG == TRUE) {
+		printf("\n");
+	}
 
 	return rtnValue;
 }
@@ -198,5 +214,4 @@ void calculate(char *expression, char *evaluation) {
 
 	complexToString(&value, evaluation);
 }
-
 

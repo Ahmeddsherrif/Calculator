@@ -11,9 +11,9 @@ COMPLEX stringToComplex(const char *inputString) {
 	COMPLEX returnedComplexNumber;
 	DestroyComplex(&returnedComplexNumber);
 
-	if (strcmp(inputString, "j") == 0) {
+	if (strcmp(inputString, "j") == 0 || strcmp(inputString, "J") == 0 ) {
 		returnedComplexNumber.imaginary = 1;
-	} else if (strcmp(inputString, "-j") == 0) {
+	} else if (strcmp(inputString, "-j") == 0 || strcmp(inputString, "-J") == 0) {
 		returnedComplexNumber.imaginary = -1;
 	}
 
@@ -21,7 +21,7 @@ COMPLEX stringToComplex(const char *inputString) {
 		char *endptr;
 		double num = strtod(inputString, &endptr);
 
-		if (*endptr == 'j') {
+		if (*endptr == 'j' || *endptr == 'J') {
 			returnedComplexNumber.imaginary = num;
 		} else {
 			returnedComplexNumber.real = num;
